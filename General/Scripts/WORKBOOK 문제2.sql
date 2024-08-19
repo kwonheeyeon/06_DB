@@ -25,6 +25,7 @@ WHERE PROFESSOR_NAME NOT LIKE '___';
 
 SELECT PROFESSOR_NAME "교수이름", EXTRACT(YEAR FROM CURRENT_DATE) - (1900 + SUBSTR(PROFESSOR_SSN, 1, 2)) -1 "나이"
 FROM TB_PROFESSOR
+WHERE SUBSTR(PROFESSOR_SSN, 8, 1) = '1'
 ORDER BY "나이" ASC;
 
 
@@ -40,7 +41,7 @@ FROM TB_PROFESSOR;
 -- 춘 기술대학교의 재수생 입학자를 조회하시오.
 -- (19살에 입학하면 재수를 하지 않은 것!)
 
-SELECT STUDENT_NO, STUDENT_NAME, SUBSTR(ENTRANCE_DATE, 1, 2), SUBSTR(STUDENT_SSN, 1, 2)
+SELECT STUDENT_NO, STUDENT_NAME
 FROM TB_STUDENT;
 
 
@@ -49,16 +50,21 @@ FROM TB_STUDENT;
 -- 2000년도 이전 학번을 받은 학생들의 학번과 이름 조회하는 SQL을 작성하시오.
 SELECT STUDENT_NO, STUDENT_NAME
 FROM TB_STUDENT
-WHERE STUDENT_NO NOT IN ('A%');
+WHERE STUDENT_NO NOT LIKE 'A%';
 
 -- 7번
 -- 학번이 A517178인 한아름 학생의 학점 총 평점을 구하는 SQL문을 작성하시오.
 -- 단, 이때 출력 화면의 헤더는 "평점"이라고 찍히게 하고,
 -- 점수는 반올림하여 소수점 이하 한자리까지만 표시한다.
-SELECT
-FROM
+SELECT ROUND(SUM(POINT) / COUNT(CLASS_NO), 1) "평점" 
+FROM TB_GRADE
+WHERE STUDENT_NO = 'A517178';
 
-
+-- 8번
+-- 학과별 학생 수를 구하여 "학과번호", "학생수(명)"의 형태로 조회하시오.
+SELECT DEPARTMENT_NO "학과번호", COUNT(*) "학생수(명)"
+FROM TB_DEPARTMENT
+GROUP BY DEPARTMENT_NO;
 
 
 
