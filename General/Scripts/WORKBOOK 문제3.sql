@@ -121,7 +121,14 @@ ORDER BY STUDENT_NAME ASC;
 -- 춘 기술대학교 서반아어학과 학생들의 지도교수를 게시하고자 한다.
 -- 학생이름, 지도교수이름 학번이 높은 순서로 조회하는 SQL을 작성하시오.
 -- 단, 지도교수가 없을 경우 "지도교수 미지정"으로 표시
-SELECT STUDENT_NAME "학생이름", PROFESSOR_NAME "지도교수"
+SELECT STUDENT_NAME "학생이름" /*PROFESSOR_NAME "지도교수"*/
+FROM TB_STUDENT
+JOIN TB_DEPARTMENT USING(DEPARTMENT_NO)
+/*JOIN TB_PROFESSOR USING(DEPARTMENT_NO)*/
+WHERE DEPARTMENT_NAME = '서반아어학과';
+			/*AND COACH_PROFESSOR_NO = PROFESSOR_NO*/;
+
+
 
 
 
