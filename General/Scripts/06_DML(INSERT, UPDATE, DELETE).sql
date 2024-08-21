@@ -292,14 +292,27 @@ FROM EMPLOYEE2
 WHERE EMP_NAME = '장채현';
 
 -- EMPLOYEE2 테이블에서 이름이 '장채현'인 사원 정보 삭제
+DELETE
+FROM EMPLOYEE2
+WHERE EMP_NAME = '장채현';
 
 -- 삭제 확인
+SELECT *
+FROM EMPLOYEE2
+WHERE EMP_NAME = '장채현'; -- 조회 결과 없음
+
+COMMIT; -- DML 수행 결과를 데이터베이스에 반영
 
 -- EMPLOYEE2 테이블 전체 삭제
+DELETE
+FROM EMPLOYEE2;
 
+-- 삭제 확인
+SELECT * FROM EMPLOYEE2; -- 조회 결과 없음
+
+ROLLBACK;
 
 ---------------------------------------------------------------------------------------------
-
 
 -- 5. TRUNCATE (DDL 입니다! DML 아닙니다!)
 -- 테이블의 전체 행을 삭제하는 DDL
@@ -331,5 +344,8 @@ TRUNCATE TABLE EMPLOYEE3;
 SELECT * FROM EMPLOYEE3;
 
 ROLLBACK;
+
 -- 롤백 후 복구 확인 -> 복구 안됨을 확인!
 SELECT * FROM EMPLOYEE3;
+
+
