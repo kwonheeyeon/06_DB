@@ -46,7 +46,6 @@ WHERE CAPACITY BETWEEN 20 AND 30;
 -- 6번
 -- 춘 기술대학교는 총장을 제외하고 모든 교수들이 소속 학과를 가지고 있다.
 -- 그럼 춘 기술대학교 총장의 이름을 알아낼 수 있는 SQL 문장을 작성하시오.
-
 SELECT PROFESSOR_NAME
 FROM TB_PROFESSOR
 WHERE DEPARTMENT_NO IS NULL;
@@ -55,7 +54,6 @@ WHERE DEPARTMENT_NO IS NULL;
 -- 7번
 -- 수강신청을 하려고 한다. 선수과목 여부를 확인해야 하는데, 선수과목이 존재하는 과목들은
 -- 어떤 과목인지 과목 번호를 조회하시오.
-
 SELECT CLASS_NO
 FROM TB_CLASS
 WHERE PREATTENDING_CLASS_NO IS NOT NULL;
@@ -63,7 +61,6 @@ WHERE PREATTENDING_CLASS_NO IS NOT NULL;
 
 -- 8번
 -- 춘 대학에는 어떤 계열(CATEGORY)들이 있는지 조회해 보시오.
-
 SELECT DISTINCT CATEGORY
 FROM TB_DEPARTMENT;
 
@@ -71,7 +68,6 @@ FROM TB_DEPARTMENT;
 -- 9번
 -- 02학번 전주 거주자들의 모임을 만들려고 한다. 휴학한 사람들은 제외한 재학중인 학생들의
 -- 학번, 이름, 주민번호를 조회하는 구문을 작성하시오.
-
 SELECT STUDENT_NO, STUDENT_NAME, STUDENT_SSN
 FROM TB_STUDENT
 WHERE ABSENCE_YN = 'N' AND STUDENT_NO LIKE('A2%') AND STUDENT_ADDRESS LIKE('%전주%');
