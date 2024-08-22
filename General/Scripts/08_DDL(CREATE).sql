@@ -717,26 +717,40 @@ INSERT INTO USER_TEST VALUES (5, 'ID_005', 'PW_005', '710518-2253515', '여', '0
 SELECT * FROM USER_TEST; 
 ----------------------------------------------------------------------------------------------------------------
 
+
 -- 8. SUBQUERY를 이용한 테이블 생성
 -- 컬럼명, 데이터 타입, 값이 복사되고, 제약조건은 NOT NULL 만 복사됨
 
 -- 1) 테이블 전체 복사
+CREATE TABLE EMPLOYEE_COPY
+AS (SELECT * FROM EMPLOYEE);
 
 SELECT * FROM EMPLOYEE_COPY;
 
 -- 2) JOIN 후 원하는 컬럼만 테이블로 복사
+CREATE TABLE EMPOLYEE_COPY2
+AS SELECT EMP_NAME, NVL(DEPT_TITLE, '부서없음') AS DEPT_TITLE, JOB_NAME
+	 FROM EMPLOYEE
+	 JOIN JOB USING (JOB_CODE)
+	 LEFT JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID) -- 왼쪽 부분은 조인 시 무조건 최종결과에 있어야 함
+	 ORDER BY JOB_CODE ASC;
 
+SELECT * FROM EMPOLYEE_COPY2; 
 
-
+----------------------------------------------------------------------------------------------
 
 -- 9. 제약조건 추가
+
 -- ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] PRIMARY KEY(컬럼명)
+
 -- ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] 
 --  FOREIGN KEY(컬럼명) REFERENCES 참조 테이블명(참조컬럼명)
      --> 참조 테이블의 PK를 기본키를 FK로 사용하는 경우 참조컬럼명 생략 가능
                                                                                                                                                       
 -- ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] UNIQUE(컬럼명)
+
 -- ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] CHECK(컬럼명 비교연산자 비교값)
+
 -- ALTER TABLE 테이블명 MODIFY 컬럼명 NOT NULL;
 
 -- 테이블 제약 조건 확인
@@ -747,29 +761,48 @@ WHERE C1.TABLE_NAME = 'EMPLOYEE_COPY';
 
 -- NOT NULL 제약 조건만 복사된 EMPLOYEE_COPY 테이블에
 -- EMP_ID 컬럼에 PRIMARY KEY 제약조건 추가
+/* ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] PRIMARY KEY(컬럼명) */
 ALTER TABLE EMPLOYEE_COPY ADD CONSTRAINT PK_EMP_COPY PRIMARY KEY(EMP_ID);
-
 
 -- * 수업시간에 활용하던 테이블에는 FK 제약조건 없는상태이므로 추가!!
 
+/* ALTER TABLE 테이블명 ADD [CONSTRAINT 제약조건명] 
+ * FOREIGN KEY(컬럼명) REFERENCES 참조 테이블명(참조컬럼명)
+*/
 
 -- EMPLOYEE테이블의 DEPT_CODE에 외래키 제약조건 추가
 -- 참조 테이블은 DEPARTMENT, 참조 컬럼은 DEPARTMENT의 기본키
-
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT DEPT_CODE_FK
+FOREIGN KEY(DEPT_CODE)
+REFERENCES DEPARTMENT; -- 컬러명 미작성 시 자동으로 PK 컬럼 참조	
+					-- == DEPARTMENT(DEPT_ID)
 
 -- EMPLOYEE테이블의 JOB_CODE 외래키 제약조건 추가
 -- 참조 테이블은 JOB, 참조 컬럼은 JOB의 기본키
-
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT JOB_CODE_FK
+FOREIGN KEY(JOB_CODE)
+REFERENCES JOB;
 
 -- EMPLOYEE테이블의 SAL_LEVEL 외래키 제약조건 추가
 -- 참조 테이블은 SAL_GRADE, 참조 컬럼은 SAL_GRADE의 기본키
-
+ALTER TABLE EMPLOYEE
+ADD CONSTRAINT SAL_LEVEL_FK
+FOREIGN KEY(SAL_LEVEL)
+REFERENCES SAL_GRADE;
 
 -- DEPARTMENT테이블의 LOCATION_ID에 외래키 제약조건 추가
 -- 참조 테이블은 LOCATION, 참조 컬럼은 LOCATION의 기본키
-
+ALTER TABLE DEPARTMENT
+ADD CONSTRAINT LOCATION_ID_FK
+FOREIGN KEY(LOCATION_ID)
+REFERENCES LOCATION;
 
 -- LOCATION테이블의 NATIONAL_CODE에 외래키 제약조건 추가
 -- 참조 테이블은 NATIONAL, 참조 컬럼은 NATIONAL의 기본키
-
+ALTER TABLE LOCATION
+ADD CONSTRAINT NATIONAL_CODE_FK
+FOREIGN KEY(NATIONAL_CODE)
+REFERENCES NATIONAL;
 
