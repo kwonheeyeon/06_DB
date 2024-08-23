@@ -178,7 +178,7 @@ SELECT * FROM USER_CONS_COLUMNS;
 
 -- 1. NOT NULL 
 -- 해당 컬럼에 반드시 값이 기록되어야 하는 경우 사용
--- 삽입/수정시 NULL값을 허용하지 않도록 컬럼레벨에서 제한
+-- 삽입/수정 시 NULL값을 허용하지 않도록 컬럼레벨에서 제한
 
 -- 컬럼 레벨 : 테이블 생성 시 생성할 컬럼의 정보를 작성하는 부분
 
@@ -211,6 +211,7 @@ SELECT * FROM USER_USED_NN; -- 오류 안 난 1행만 삽입됨을 확인
 -- 컬럼에 입력 값에 대해서 중복을 제한하는 제약조건
 -- 컬럼레벨에서 설정 가능, 테이블 레벨에서 설정 가능
 -- 단, UNIQUE 제약 조건이 설정된 컬럼에 NULL 값은 중복 삽입 가능.
+--> 왜? 값이 없어서 비교가 안됨
 
 
 -- UNIQUE 제약 조건 테이블 생성
@@ -318,11 +319,14 @@ SELECT * FROM USER_USED_UK2;
 -- *** 테이블에서 한 행의 정보를 찾기위해 사용할 컬럼을 의미함 ***
 -- *** 테이블에 대한 식별자(IDENTIFIER) 역할을 함 ***
 
+-- 각 행을 구분하기 위한 식별 역할의 컬럼 -> 컬럼에 저장된 값만 알면 모든 행을 구별할 수 있음
+-- 중복 X(UNIQUE) + 무조건 값이 존재N(OT NULL)
+-- PK는 테이블에 1개만 존재 가능 (한 컬럼 X, PK 제약 조건이 1개)
 
 -- NOT NULL + UNIQUE 제약조건의 의미
 -- 한 테이블당 한 개만 설정할 수 있음
--- 컬럼레벨, 테이블레벨 둘다 설정 가능함
--- 한 개 컬럼에 설정할 수도 있고, 여러개의 컬럼을 묶어서 설정할 수 있음
+-- 컬럼레벨, 테이블레벨 둘 다 설정 가능함
+-- 한 개 컬럼에 설정할 수도 있고, 여러 개의 컬럼을 묶어서 설정할 수 있음
 	--> 복합키 가능
 
 
@@ -394,6 +398,13 @@ VALUES(NULL, 'user01', 'pass01', '신사임당', '여', '010-9999-9999', 'sin123
 
 /* 관계형 데이터 베이스의 핵심 */
 -- 4. FOREIGN KEY(외부키 / 외래키) 제약조건 
+
+-- 자식 테이블의 한 커럼에 작성될 수 있는 값은 부모 테이블의 한 컬럼(PK, UNIQUE)에 작성된 값만 쓸 수 있음
+--> 자식 테이블이 부모 테이블을 참조
+
+-- 부모 - 자식 관계 형성
+-- 	-> 두 테이블에 같은 종류의 데이터를 지닌 컬럼이 있다!
+--		-> JOIN의 연결 기준이 될 수 있다!
 
 -- 참조(REFERENCES)된 다른 테이블의 컬럼이 제공하는 값만 사용할 수 있음
 -- FOREIGN KEY제약조건에 의해서 테이블간의 관계(RELATIONSHIP)가 형성됨
@@ -503,7 +514,8 @@ WHERE GRADE_CODE = 10;
 -- 자식 테이블인 USER_USED_FK 테이블에서 GRADE_CODE 컬럼의 값 10을 참조하고 있기 때문에 삭제 불가!!
 
 
--- 2) ON DELETE SET NULL : 부모키 삭제 시 자식키를 NULL로 변경하는 옵션
+-- 2) ON DELETE SET NULL : 부모키 삭제 시 자식 키를 NULL로 변경하는 옵션
+-- -> 부모 행을 삭제하면 참조하던 값을 가지고 있는 자식 행의 컬럼 값을 NULL로 변경(SET)
 CREATE TABLE USER_GRADE2(
   GRADE_CODE NUMBER PRIMARY KEY,
   GRADE_NAME VARCHAR2(30) NOT NULL
@@ -517,7 +529,7 @@ SELECT * FROM USER_GRADE2;
 COMMIT;
 
 
--- ON DELETE SET NUL 삭제 옵션이 적용된 테이블 생성
+-- ON DELETE SET NULL 삭제 옵션이 적용된 테이블 생성
 CREATE TABLE USER_USED_FK2(
   USER_NO NUMBER PRIMARY KEY,
   USER_ID VARCHAR2(20) UNIQUE,
@@ -566,7 +578,8 @@ SELECT * FROM USER_USED_FK2; -- 10이 NULL로 변했는지 확인
 
 
 -- 3) ON DELETE CASCADE : 부모키 삭제 시 자식키도 함께 삭제됨
--- 부모키 삭제시 값을 사용하는 자식 테이블의 컬럼에 해당하는 행이 삭제가 됨
+-- -> 부모 행을 삭제하면 참조하던 값을 가지고 있는 자식 행을 삭제
+
 
 CREATE TABLE USER_GRADE3(
   GRADE_CODE NUMBER PRIMARY KEY,
