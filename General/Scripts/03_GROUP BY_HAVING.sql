@@ -86,7 +86,7 @@ GROUP BY JOB_CODE;
 -- * 여러 컬럼을 묶어서 그룹으로 지정 가능
 -- *** GROUP BY 사용시 주의사항
 --> SELECT문에 GROUP BY절을 사용할 경우
---  SELECT절에 명시한 조회할려면 컬럼 중
+--  SELECT절에 명시한 조회히려는 컬럼 중
 --  그룹함수가 적용되지 않은 컬럼을 
 --  모두 GROUP BY절에 작성해야함.
 
@@ -123,7 +123,7 @@ ORDER BY DEPT_CODE ASC, SAL_LEVEL ASC;
  * */
 
 
--- 부서별 평균 급여RK 3500000원 이상인 부서를 조회하여 부서코드 오름차순으로 정렬
+-- 부서별 평균 급여가 3500000원 이상인 부서를 조회하여 부서코드 오름차순으로 정렬
 SELECT DEPT_CODE, FLOOR(AVG(SALARY))
 FROM EMPLOYEE
 WHERE SALARY >= 3500000
@@ -190,7 +190,7 @@ ORDER BY DEPT_CODE ASC;
 
 -- 집계함수(ROLLUP, CUBE)
 -- 그룹 별 산출한 결과 값의 집계를 계산하는 함수
--- GOURP BY 절에만 작성하는 함수
+-- GROUP BY 절에만 작성하는 함수
 
 
 -- ROLLUP 함수 : 그룹별로 중간 집계 처리를 하는 함수
