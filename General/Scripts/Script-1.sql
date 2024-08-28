@@ -26,6 +26,7 @@ CREATE SEQUENCE SEQ_USER_NO NOCACHE;
 
 -- 샘플 데이터 INSERT
 INSERT INTO TB_USER VALUES (SEQ_USER_NO.NEXTVAL, 'user01', 'pass01', '유저일', DEFAULT);
+INSERT INTO TB_USER VALUES (SEQ_USER_NO.NEXTVAL, 'user05', 'pass05', '이순신', DEFAULT);
 
 SELECT * FROM TB_USER;
 
@@ -41,3 +42,61 @@ WHERE USER_ID = '' AND USER_PW = '';
 -- 아이디 또는 비밀번호 불일치 -> 수정 실패(0)
 
 ROLLBACK;
+
+-------------------------------------------------------------------
+
+/* USER 관리 프로그램 - JAVA */
+
+-- User 전체 조회(SELECT)
+SELECT
+	USER_NO,
+	USER_ID,
+	USER_PW,
+	USER_NAME,
+	TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일"') ENROLL_DATE
+FROM TB_USER
+ORDER BY USER_NO ASC;
+
+------------------------------------------------------------------
+
+-- 이름에 검색어가 포함된 User 조회(SELECT)
+SELECT
+	USER_NO,
+	USER_ID,
+	USER_PW,
+	USER_NAME,
+	TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일"') ENROLL_DATE
+FROM TB_USER
+WHERE USER_NAME LIKE '%' || ? || '%'
+ORDER BY USER_NO ASC;
+
+-----------------------------------------------------------------
+
+-- USER_NO를 입력 받아 일치하는 User 삭제(DELETE)
+DELETE
+FROM TB_USER
+WHERE USER_NO = ?;
+
+-----------------------------------------------------------------
+
+-- 입력 받은 ID, PW가 일치하는 User가 있는지 조회(SELECT)
+SELECT USER_NO
+FROM TB_USER
+WHERE USER_ID = ? AND USER_PW = ?;
+
+-----------------------------------------------------------------
+
+-- USER_NO(PK)가 일치하는 User의 이름을 수정(UPDATE)
+UPDATE TB_USER
+SET USER_NAME = ?
+WHERE USER_NO = (SELECT USER_NO
+								 FROM TB_USER
+								 WHERE USER_ID = ? AND USER_PW = ?);
+
+-----------------------------------------------------------------
+
+-- 중복되는 ID가 있는지 조회
+-- 중복이면 1, 아니면 0
+SELECT COUNT(*)
+FROM TB_USER
+WHERE USER_ID = ?;
